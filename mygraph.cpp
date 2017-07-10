@@ -11,11 +11,7 @@ MyGraph::~MyGraph() {
 void MyGraph::insert_graph_node(char id){
     // insertar nodo en la lista principal
 
-    GRAPHNODE* newNode = (GRAPHNODE*) malloc(sizeof(GRAPHNODE));
-    newNode->id = id;
-    newNode->isVisited = 0;
-    newNode->headInnerList = NULL;
-    newNode->nextGraphNode = NULL;
+    GraphNode* newNode = new GraphNode(id);
 
     // la insercion se hara al principio, ya que no importa el orden
 
@@ -26,7 +22,7 @@ void MyGraph::insert_graph_node(char id){
 }
 
 void MyGraph::print_graph(){
-    GRAPHNODE* temp = this->headGraphNode;
+    GraphNode* temp = this->headGraphNode;
     while(temp != NULL){
         printf("%c--> ", temp->id);
         temp = temp->nextGraphNode;
@@ -35,8 +31,8 @@ void MyGraph::print_graph(){
     printf("NULL\n\n");
 }
 
-MyGraph::GRAPHNODE *MyGraph::get_node(char id){
-    GRAPHNODE* temp = this->headGraphNode;
+GraphNode *MyGraph::get_node(char id){
+    GraphNode* temp = this->headGraphNode;
 
     // el ciclo se detiene o cuando encuentra el nodo o cuando termina la lista
     while(temp != NULL && temp->id != id){
@@ -56,7 +52,7 @@ void MyGraph::print_graph_with_neighbors(){
     while(node != NULL){
 
         printf("NODE: %c\n", node->id);
-        NEIGHBORNODE* neighbor = node->headInnerList;
+        NeighborNode* neighbor = node->headInnerList;
         printf("\t"); // un tab para mayor orden
 
         while(neighbor != NULL){
@@ -75,12 +71,9 @@ void MyGraph::print_graph_with_neighbors(){
 
 void MyGraph::insert_neighbor(char idOrigin, char idDestiny, int cost){
     // obtengo el nodo al cual voy a insertar el vecino
-    GRAPHNODE* node = get_node(idOrigin);
+    GraphNode* node = get_node(idOrigin);
 
-    NEIGHBORNODE* newNeighbor = (NEIGHBORNODE*) malloc(sizeof(NEIGHBORNODE));
-    newNeighbor->id = idDestiny;
-    newNeighbor->cost = cost;
-    newNeighbor->nextNeighbor = NULL;
+    NeighborNode* newNeighbor = new NeighborNode(idDestiny, cost);
 
     // insercion al principio
     newNeighbor->nextNeighbor = node->headInnerList;
@@ -94,7 +87,7 @@ void MyGraph::insert_neighbor_non_addresed(char lastID, char firstID, int cost){
 
 void MyGraph::set_not_visited(){
     // marcar todos los nodos como no visitados
-    GRAPHNODE* temp = this->headGraphNode;
+    GraphNode* temp = this->headGraphNode;
 
     while(temp != NULL){
         temp->isVisited = false;
@@ -103,16 +96,18 @@ void MyGraph::set_not_visited(){
 }
 
 bool MyGraph::has_neighbor(char origin, char destiny){
-    GRAPHNODE* node = get_node(origin);
+    GraphNode* node = get_node(origin);
 
     if(node != NULL){
-        NEIGHBORNODE* temp = node->headInnerList;
+        NeighborNode* temp = node->headInnerList;
 
         while(temp != NULL){
 
             if(temp->id == destiny){
                 return true;
             }
+
+            temp = temp->nextNeighbor;
 
         }
 
