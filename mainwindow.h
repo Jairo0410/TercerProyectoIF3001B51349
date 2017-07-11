@@ -7,6 +7,12 @@
 #include <QtGui>
 #include <QtCore>
 #include <QGraphicsScene>
+#include <QMouseEvent>
+#include <QGraphicsSceneMouseEvent>
+#include <QGraphicsEllipseItem>
+#include <QInputDialog>
+#include <QMessageBox>
+#include <QComboBox>
 
 namespace Ui {
 class MainWindow;
@@ -58,9 +64,17 @@ private:
 
     void paint_graph_path(MyGraph *graph);
     void insert_graphic_node(char ID, int x, int y);
-    GRAPHICNODE* get_graphic_node(char ID);
     void insert_graphic_neighbor(char origin, char destiny, int cost);
+    GRAPHICNODE* get_graphic_node(char ID);
 
+protected:
+    void mousePressEvent(QMouseEvent *event) override;
+
+private slots:
+    void on_btnAddNeighbor_clicked();
+    void on_btnPrim_clicked();
+    void on_btnMontecarlo_clicked();
+    void on_btnDijkstra_clicked();
 };
 
 #endif // MAINWINDOW_H

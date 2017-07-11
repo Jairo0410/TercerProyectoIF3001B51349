@@ -2,7 +2,6 @@
 #define MYGRAPH_H
 
 #include <cstddef>
-#include <cstdio>
 #include <cstdlib>
 #include <ctime>
 
@@ -19,8 +18,6 @@ public:
     // general graph methods
 
     void insert_graph_node(char ID);
-    void print_graph();
-    void print_graph_with_neighbors();
     void insert_neighbor_non_addresed(char origin, char destiny, int cost);
     GraphNode* get_node(char ID);
     void set_not_visited();

@@ -26,16 +26,6 @@ void MyGraph::insert_graph_node(char id){
     size++;
 }
 
-void MyGraph::print_graph(){
-    GraphNode* temp = this->headGraphNode;
-    while(temp != NULL){
-        printf("%c--> ", temp->id);
-        temp = temp->nextGraphNode;
-    }
-
-    printf("NULL\n\n");
-}
-
 GraphNode *MyGraph::get_node(char id){
     GraphNode* temp = this->headGraphNode;
 
@@ -49,29 +39,6 @@ GraphNode *MyGraph::get_node(char id){
 
 bool MyGraph::exists(char ID){
     return get_node(ID) != NULL;
-}
-
-void MyGraph::print_graph_with_neighbors(){
-    GraphNode* node = this->headGraphNode;
-
-    while(node != NULL){
-
-        printf("NODE: %c\n", node->id);
-        NeighborNode* neighbor = node->headInnerList;
-        printf("\t"); // un tab para mayor orden
-
-        while(neighbor != NULL){
-            printf("%c-> ", neighbor->id);
-            neighbor = neighbor->nextNeighbor;
-        }
-
-        printf("NULL\n\n");
-        node = node->nextGraphNode;
-
-    }
-
-    printf("\n\n");
-
 }
 
 void MyGraph::insert_neighbor(char idOrigin, char idDestiny, int cost){
@@ -312,6 +279,8 @@ void MyGraph::depth_scan(MyGraph *graph, GraphNode *node){
 
 MyGraph* MyGraph::get_Montecarlo(){
     MyGraph *result = new MyGraph();
+
+    this->reset_values();
 
     std::srand(time(NULL));
     int rand =  std::rand() % this->size;

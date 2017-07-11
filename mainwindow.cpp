@@ -1,10 +1,5 @@
 #include "mainwindow.h"
-#include "mygraph.h"
-
 #include "ui_mainwindow.h"
-
-#include <QGraphicsEllipseItem>
-#include <iostream>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -19,17 +14,8 @@ MainWindow::MainWindow(QWidget *parent) :
     this->node_head = NULL;
     this->neighbor_head = NULL;
 
-    insert_graphic_node('B', 40, 30);
-    insert_graphic_node('E', 220, 30);
-    insert_graphic_node('F', 80, 200);
-    insert_graphic_node('T', 220, 300);
-
-    insert_graphic_neighbor('F', 'B', 6);
-    insert_graphic_neighbor('F', 'E', 8);
-    insert_graphic_neighbor('F', 'T', 10);
-    insert_graphic_neighbor('T', 'B', 17);
-
-    paint_graph_path(this->graph->get_Prim());
+    this->ui->cbxOrigin->addItem(QString("Seleccione"));
+    this->ui->cbxDestiny->addItem(QString("Seleccione"));
 
     ui->graphicsView->setScene(this->scene);
 }
@@ -129,4 +115,70 @@ void MainWindow::paint_graph_path(MyGraph *graph){
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::mousePressEvent(QMouseEvent *event){
+    QPointF point = event->localPos();
+
+    // se presiona el click derecho
+    if(event->button() == Qt::RightButton){
+        QString result = QInputDialog::getText(this, "Ingrese una letra", "Ingrese una letra");
+        if(!result.isEmpty()){
+            char ID = result.at(0).toLatin1();
+            if(!this->graph->exists(ID)){
+                this->insert_graphic_node(ID, point.x()-1000, point.y()-300);
+                ui->cbxDestiny->addItem(QString(ID));
+                ui->cbxOrigin->addItem(QString(ID));
+            }else {
+                QMessageBox::warning(this, "Error", "El nodo ya existe");
+            }
+        }
+    }
+}
+
+void MainWindow::on_btnAddNeighbor_clicked()
+{
+    int origin = ui->cbxOrigin->currentIndex();
+    int destiny = ui->cbxDestiny->currentIndex();
+
+    if(origin != destiny && origin && destiny){
+        unsigned int cost = QInputDialog::getInt(this, "Ingrese un valor entero", "Ingrese el costo del vecino");
+        if(cost){
+            char originID = ui->cbxOrigin->currentText().at(0).toLatin1();
+            char destinyID = ui->cbxDestiny->currentText().at(0).toLatin1();
+            if(!this->graph->has_neighbor(originID, destinyID)){
+                insert_graphic_neighbor(originID, destinyID, cost);
+            }else{
+                QMessageBox::warning(this, "Ya existe", "El vecino ya existe");
+            }
+        }
+    }else{
+        QMessageBox::warning(this, "Incorrecto", "Origen o Destino incorrectos");
+    }
+}
+
+void MainWindow::on_btnPrim_clicked()
+{
+    paint_graph_path(this->graph->get_Prim());
+}
+
+void MainWindow::on_btnMontecarlo_clicked()
+{
+    paint_graph_path(this->graph->get_Montecarlo());
+}
+
+void MainWindow::on_btnDijkstra_clicked()
+{
+    int origin = ui->cbxOrigin->currentIndex();
+    int destiny = ui->cbxDestiny->currentIndex();
+
+    if(origin != destiny && origin && destiny){
+        char originID = ui->cbxOrigin->currentText().at(0).toLatin1();
+        char destinyID = ui->cbxDestiny->currentText().at(0).toLatin1();
+
+        paint_graph_path(this->graph->get_Dijkstra(originID, destinyID));
+
+    }else{
+        QMessageBox::warning(this, "Incorrecto", "Origen o Destino incorrectos");
+    }
 }
