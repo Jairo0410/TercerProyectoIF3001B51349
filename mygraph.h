@@ -7,6 +7,7 @@
 
 #include "graphnode.h"
 #include "neighbornode.h"
+#include "queue.h"
 
 class MyGraph {
 public:
@@ -24,11 +25,13 @@ public:
     void set_not_visited();
     bool has_neighbor(char origin, char destiny);
     bool exists(char ID);
+    void reset_values();
+    void relax(GraphNode* current, GraphNode* adjacent, int cost);
 
     // graph build methods
-    MyGraph get_Dijkstra(char start, char goal);
-    MyGraph get_Prim();
-    MyGraph get_Montecarlo();
+    MyGraph* get_Dijkstra(char start, char goal);
+    MyGraph* get_Prim();
+    MyGraph* get_Montecarlo();
 
     // variables
     int size;
@@ -37,6 +40,7 @@ private:
 
     // variables
     GraphNode* headGraphNode;
+    GraphNode* tailGraphNode;
 
     // metodos privados
     void insert_neighbor(char origin, char destiny, int cost);
