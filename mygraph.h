@@ -4,6 +4,7 @@
 #include <cstddef>
 #include <cstdio>
 #include <cstdlib>
+#include <ctime>
 
 #include "graphnode.h"
 #include "neighbornode.h"
@@ -15,7 +16,7 @@ public:
     MyGraph(const MyGraph& orig);
     virtual ~MyGraph();
 
-    // graph methods
+    // general graph methods
 
     void insert_graph_node(char ID);
     void print_graph();
@@ -23,10 +24,17 @@ public:
     void insert_neighbor_non_addresed(char origin, char destiny, int cost);
     GraphNode* get_node(char ID);
     void set_not_visited();
-    bool has_neighbor(char origin, char destiny);
+
+    // Prim
     bool exists(char ID);
+
+    // Dijkstra
     void reset_values();
     void relax(GraphNode* current, GraphNode* adjacent, int cost);
+    bool has_neighbor(char origin, char destiny);
+
+    // Montecarlo
+    void depth_scan(MyGraph* graph, GraphNode* node);
 
     // graph build methods
     MyGraph* get_Dijkstra(char start, char goal);

@@ -272,3 +272,60 @@ void MyGraph::reset_values(){
         temp = temp->nextGraphNode;
     }
 }
+
+void MyGraph::depth_scan(MyGraph *graph, GraphNode *node){
+
+    node->isVisited = true;
+
+    while(node != NULL){
+        NeighborNode* minimum = NULL;
+        GraphNode* minimumNode = NULL;
+
+        NeighborNode *neighbor = node->headInnerList;
+
+        while(neighbor != NULL){
+
+            if(minimum == NULL || minimum->cost > neighbor->cost){
+                GraphNode *neighborNode = get_node(neighbor->id);
+
+                if(!neighborNode->isVisited){
+                    minimum = neighbor;
+                    minimumNode = neighborNode;
+                }
+
+            }
+
+            neighbor = neighbor->nextNeighbor;
+        }
+
+        if(minimum != NULL){
+            graph->insert_graph_node(minimum->id);
+            graph->insert_neighbor_non_addresed(node->id, minimum->id, minimum->cost);
+            depth_scan(graph, minimumNode);
+        }else{
+            break;
+        }
+
+    }
+
+}
+
+MyGraph* MyGraph::get_Montecarlo(){
+    MyGraph *result = new MyGraph();
+
+    std::srand(time(NULL));
+    int rand =  std::rand() % this->size;
+
+    GraphNode* temp = this->headGraphNode;
+
+    while(temp != NULL && rand--){
+        temp = temp->nextGraphNode;
+    }
+
+    if(temp != NULL){
+        result->insert_graph_node(temp->id);
+        depth_scan(result, temp);
+    }
+
+    return result;
+}
